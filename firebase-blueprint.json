@@ -1,0 +1,148 @@
+{
+  "entities": {
+    "users": {
+      "title": "User Profile",
+      "description": "Student and admin profiles containing academic data, skills, and career goals",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "college": { "type": "string", "maxLength": 150 },
+        "department": { "type": "string", "maxLength": 100 },
+        "degree": { "type": "string", "maxLength": 100 },
+        "year": { "type": "string", "maxLength": 50 },
+        "semester": { "type": "string", "maxLength": 50 },
+        "skills": { "type": "array" },
+        "interests": { "type": "array" },
+        "careerGoals": { "type": "array" },
+        "preferences": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "opportunities": {
+      "title": "Opportunity",
+      "description": "College and industry internships, hackathons, scholarships, workshops, and competitions",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "organization": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "category": { "type": "string", "maxLength": 80 },
+        "location": { "type": "string", "maxLength": 100 },
+        "mode": { "type": "string", "enum": ["Remote", "On-site", "Hybrid"] },
+        "deadline": { "type": "string", "maxLength": 50 },
+        "eligibility": { "type": "object" },
+        "skills": { "type": "array" },
+        "benefits": { "type": "array" },
+        "applicationUrl": { "type": "string", "maxLength": 500 },
+        "department": { "type": "string", "maxLength": 100 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["active", "closed", "draft"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "organization", "category", "deadline", "status"]
+    },
+    "announcements": {
+      "title": "Announcement",
+      "description": "Campus notifications, placement drives, exams, and departmental circulars",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "summary": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 80 },
+        "department": { "type": "string", "maxLength": 100 },
+        "priority": { "type": "string", "enum": ["High", "Medium", "Low", "Urgent"] },
+        "author": { "type": "string", "maxLength": 100 },
+        "attachments": { "type": "array" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "description", "category", "priority", "published"]
+    },
+    "savedOpportunities": {
+      "title": "Saved Opportunity",
+      "description": "Bookmarked opportunity for a student",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "opportunityId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "opportunityId"]
+    },
+    "applications": {
+      "title": "Application Record",
+      "description": "Student tracking record for an opportunity application",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "opportunityId": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["Saved", "Planning to Apply", "Applied", "Interview", "Selected", "Rejected", "Completed"] },
+        "appliedAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "notes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["userId", "opportunityId", "status"]
+    },
+    "notifications": {
+      "title": "Notification",
+      "description": "In-app notifications for students",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["match", "deadline", "announcement", "application", "recommendation"] },
+        "title": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 500 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "type", "title", "message", "read"]
+    },
+    "admins": {
+      "title": "Admin Record",
+      "description": "Trusted admin authorization document",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["admin"] }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/users" },
+      "description": "Student user profiles and preferences"
+    },
+    "/opportunities/{opportunityId}": {
+      "schema": { "$ref": "#/entities/opportunities" },
+      "description": "College and external opportunities"
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/announcements" },
+      "description": "College and campus announcements"
+    },
+    "/savedOpportunities/{saveId}": {
+      "schema": { "$ref": "#/entities/savedOpportunities" },
+      "description": "Student bookmarked opportunities"
+    },
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/applications" },
+      "description": "Student application tracking records"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/notifications" },
+      "description": "Student personal notifications"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/admins" },
+      "description": "Admin authorization registry"
+    }
+  }
+}
